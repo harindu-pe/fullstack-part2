@@ -36,7 +36,18 @@ const App = () => {
     const foundPerson = persons.find((person) => person.name === newName);
 
     if (!!foundPerson) {
-      alert(`${newName} is already added to phonebook`);
+      // alert(`${newName} is already added to phonebook`);
+      // updating existing person with new number
+      // person object
+      const personObject = {
+        name: newName,
+        number: newNumber,
+        id: foundPerson.id,
+      };
+
+      noteService.update(foundPerson.id, personObject).then((returnedNote) => {
+        window.location.reload();
+      });
     } else {
       // person object
       const personObject = {
@@ -44,7 +55,6 @@ const App = () => {
         number: newNumber,
         id: String(persons.length + 1),
       };
-
       // adding to the server
       noteService.create(personObject).then((returnedNote) => {
         // adding to state
