@@ -32,10 +32,19 @@ const App = () => {
       alert(`${newName} is already added to phonebook`);
     } else {
       //adding to state
-      setPersons((prev) => [
-        ...prev,
-        { name: newName, number: newNumber, id: persons.length + 1 },
-      ]);
+      const personObject = {
+        name: newName,
+        number: newNumber,
+        id: persons.length + 1,
+      };
+
+      setPersons((prev) => [...prev, personObject]);
+      // adding to the server
+      axios
+        .post("http://localhost:3001/persons", personObject)
+        .then((response) => {
+          console.log(response);
+        });
     }
   };
 
