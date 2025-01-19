@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
+import Notification from "./components/Notification";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import noteService from "./services/notes";
-import Error from "./components/Error";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -46,11 +46,30 @@ const App = () => {
         number: newNumber,
         id: foundPerson.id,
       };
-
-      noteService.update(foundPerson.id, personObject).then((returnedNote) => {
-        // update message
-        setNotification(`Updated ${returnedNote.name}`);
-      });
+      noteService
+        .update(foundPerson.id, personObject)
+        .then((returnedPerson) => {
+          // update state
+          setPersons(
+            persons.map((person) =>
+              person.id === foundPerson.id ? returnedPerson : person
+            )
+          );
+          // update success message
+          setNotification({
+            message: `Updated ${returnedPerson.name}`,
+            code: "success",
+          });
+        })
+        .catch((error) => {
+          // update state
+          setPersons(persons.filter((person) => person.id !== foundPerson.id));
+          // update error message
+          setNotification({
+            message: `Information of ${foundPerson.name} has already been reeeeeemoved from server`,
+            code: "success",
+          });
+        });
     } else {
       // person object
       const personObject = {
@@ -63,7 +82,10 @@ const App = () => {
         // adding to state
         setPersons(persons.concat(returnedNote));
         // added message
-        setNotification(`Created ${returnedNote.name}`);
+        setNotification({
+          message: `Created ${returnedNote.name}`,
+          code: "success",
+        });
       });
     }
     setTimeout(() => {
@@ -86,7 +108,10 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Error message={notification} />
+      <Notification
+        message={notification?.message}
+        className={notification?.code}
+      />
 
       <Filter filter={filter} handleFilter={handleFilter} />
 
