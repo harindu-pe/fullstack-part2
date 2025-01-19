@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import axios from "axios";
 import noteService from "./services/notes";
 
 const App = () => {
@@ -23,6 +22,13 @@ const App = () => {
     setFilter(e.target.value);
   };
 
+  const handleDelete = (person) => {
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      noteService.deletePerson(person.id);
+      window.location.reload();
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -36,7 +42,7 @@ const App = () => {
       const personObject = {
         name: newName,
         number: newNumber,
-        id: persons.length + 1,
+        id: String(persons.length + 1),
       };
 
       // adding to the server
@@ -80,6 +86,7 @@ const App = () => {
         filter={filter}
         filteredPersons={filteredPersons}
         persons={persons}
+        handleDelete={handleDelete}
       />
     </div>
   );
