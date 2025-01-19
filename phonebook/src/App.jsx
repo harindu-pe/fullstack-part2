@@ -3,12 +3,14 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import noteService from "./services/notes";
+import Error from "./components/Error";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notification, setNotification] = useState(null);
 
   const handleNameInput = (e) => {
     setNewName(e.target.value);
@@ -46,7 +48,8 @@ const App = () => {
       };
 
       noteService.update(foundPerson.id, personObject).then((returnedNote) => {
-        window.location.reload();
+        // update message
+        setNotification(`Updated ${returnedNote.name}`);
       });
     } else {
       // person object
@@ -59,8 +62,13 @@ const App = () => {
       noteService.create(personObject).then((returnedNote) => {
         // adding to state
         setPersons(persons.concat(returnedNote));
+        // added message
+        setNotification(`Created ${returnedNote.name}`);
       });
     }
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
   };
 
   const filteredPersons = persons.filter((person) => {
@@ -77,6 +85,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Error message={notification} />
 
       <Filter filter={filter} handleFilter={handleFilter} />
 
