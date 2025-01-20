@@ -26,7 +26,6 @@ function App() {
   return (
     <div>
       find countries <input value={filter} onChange={handleFilter} />
-      {console.log(filter)}
       <Countries filteredCountries={filteredCountries} filter={filter} />
     </div>
   );
