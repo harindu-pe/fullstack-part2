@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import countryService from "../services/countries";
 import SingleCountry from "./SingleCountry";
+import ListSingleCountry from "./ListSingleCountry";
 
 const Countries = ({ filteredCountries, filter }) => {
   const [country, setCountry] = useState("");
@@ -24,7 +25,7 @@ const Countries = ({ filteredCountries, filter }) => {
     return (
       <div>
         {filteredCountries.map((country) => (
-          <div key={country.name.common}>{country.name.common}</div>
+          <ListSingleCountry key={country.name.common} country={country} />
         ))}
       </div>
     );
@@ -36,7 +37,7 @@ const Countries = ({ filteredCountries, filter }) => {
       return (
         <div>
           {filteredCountries.map((country) => (
-            <div key={country.name.common}>{country.name.common}</div>
+            <ListSingleCountry key={country.name.common} country={country} />
           ))}
         </div>
       );
