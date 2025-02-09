@@ -62,12 +62,10 @@ const App = () => {
           });
         })
         .catch((error) => {
-          // update state
-          setPersons(persons.filter((person) => person.id !== foundPerson.id));
           // update error message
           setNotification({
-            message: `Information of ${foundPerson.name} has already been reeeeeemoved from server`,
-            code: "success",
+            message: `${error.response.data.error}`,
+            code: "error",
           });
         });
     } else {
@@ -78,15 +76,24 @@ const App = () => {
         id: String(persons.length + 1),
       };
       // adding to the server
-      noteService.create(personObject).then((returnedNote) => {
-        // adding to state
-        setPersons(persons.concat(returnedNote));
-        // added message
-        setNotification({
-          message: `Created ${returnedNote.name}`,
-          code: "success",
+      noteService
+        .create(personObject)
+        .then((returnedNote) => {
+          // adding to state
+          setPersons(persons.concat(returnedNote));
+          // added message
+          setNotification({
+            message: `Created ${returnedNote.name}`,
+            code: "success",
+          });
+        })
+        .catch((error) => {
+          // update error message
+          setNotification({
+            message: `${error.response.data.error}`,
+            code: "error",
+          });
         });
-      });
     }
     setTimeout(() => {
       setNotification(null);
